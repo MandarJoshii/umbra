@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: umbra-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: umbra
+      POSTGRES_PASSWORD: umbra_dev_password
+      POSTGRES_DB: umbra
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: umbra-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
