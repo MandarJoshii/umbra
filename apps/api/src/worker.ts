@@ -31,7 +31,6 @@ async function getOrCreateServiceId(serviceName: string): Promise<number> {
 }
 
 async function processBatch() {
-  // Pull up to BATCH_SIZE items off the front of the queue in one call
   const rawItems = await redis.lpop(SPAN_QUEUE_KEY, BATCH_SIZE);
 
   if (!rawItems || rawItems.length === 0) {
@@ -59,6 +58,12 @@ async function processBatch() {
 
   await db.insert(spans).values(rows);
   console.log(`Wrote ${rows.length} span(s) to Postgres`);
+
+  // Notify any subscribed WebSocket clients that new spans just landed
+  await redis.publish(
+    "umbra:spans:events",
+    JSON.stringify({ type: "spans.created", count: rows.length })
+  );
 }
 
 async function startWorker() {
