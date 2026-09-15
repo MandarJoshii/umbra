@@ -1,6 +1,7 @@
 import Fastify from "fastify";
-import { db } from "./db/index.js";
-import { services } from "./db/schema.js";
+import { servicesRoutes } from "./routes/services.js";
+import { incidentsRoutes } from "./routes/incidents.js";
+import { spansRoutes } from "./routes/spans.js";
 
 const app = Fastify({ logger: true });
 
@@ -8,21 +9,9 @@ app.get("/health", async () => {
   return { status: "ok", service: "api" };
 });
 
-app.get("/services", async () => {
-  const allServices = await db.select().from(services);
-  return allServices;
-});
-
-app.post<{ Body: { name: string } }>("/services", async (request, reply) => {
-  const { name } = request.body;
-
-  if (!name) {
-    return reply.status(400).send({ error: "name is required" });
-  }
-
-  const [created] = await db.insert(services).values({ name }).returning();
-  return reply.status(201).send(created);
-});
+app.register(servicesRoutes);
+app.register(incidentsRoutes);
+app.register(spansRoutes);
 
 const start = async () => {
   try {
