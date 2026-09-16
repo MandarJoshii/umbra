@@ -4,3 +4,4 @@ packages:
 allowBuilds:
   esbuild: false
   protobufjs: true
+  unrs-resolver: true
