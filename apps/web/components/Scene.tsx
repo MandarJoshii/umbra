@@ -4,6 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Text, Line } from "@react-three/drei";
 import { useServices, type Service } from "@/lib/useServices";
 import { useSpans } from "@/lib/useSpans";
+import { useLiveFeed } from "@/lib/useLiveFeed";
 import { useMemo } from "react";
 
 function ServiceNode({ position, name }: { position: [number, number, number]; name: string }) {
@@ -39,6 +40,7 @@ function getServicePositions(services: Service[]): Map<number, [number, number, 
 }
 
 function ServiceGraph() {
+  useLiveFeed();
   const { data: services, isLoading: servicesLoading } = useServices();
   const { data: spans, isLoading: spansLoading } = useSpans();
 
