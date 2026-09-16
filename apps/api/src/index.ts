@@ -1,4 +1,5 @@
 import Fastify from "fastify";
+import cors from "@fastify/cors";
 import websocketPlugin from "@fastify/websocket";
 import { servicesRoutes } from "./routes/services.js";
 import { incidentsRoutes } from "./routes/incidents.js";
@@ -8,6 +9,9 @@ import { liveRoutes } from "./routes/live.js";
 
 const app = Fastify({ logger: true });
 
+app.register(cors, {
+  origin: "http://localhost:3000",
+});
 app.register(websocketPlugin);
 
 app.get("/health", async () => {
