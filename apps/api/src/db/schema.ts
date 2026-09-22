@@ -52,6 +52,6 @@ export const runbooks = pgTable("runbooks", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   content: text("content").notNull(),
-  embedding: vector("embedding", { dimensions: 1536 }),
+  embedding: vector("embedding", { dimensions: 384 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
