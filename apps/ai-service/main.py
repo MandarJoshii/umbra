@@ -1,3 +1,4 @@
+from agent import analyze_incident
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import text
@@ -15,6 +16,10 @@ class RunbookCreate(BaseModel):
 class RunbookSearchQuery(BaseModel):
     query: str
     limit: int = 5
+
+
+class IncidentAnalysisRequest(BaseModel):
+    description: str
 
 
 @app.get("/health")
@@ -72,3 +77,9 @@ def search_runbooks(query: RunbookSearchQuery):
         ]
     finally:
         session.close()
+
+
+@app.post("/incidents/analyze")
+def analyze(request: IncidentAnalysisRequest):
+    analysis = analyze_incident(request.description)
+    return {"analysis": analysis}
